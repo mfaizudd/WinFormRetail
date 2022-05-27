@@ -11,29 +11,24 @@ using WinFormRetail.Data;
 namespace WinFormRetail.Migrations
 {
     [DbContext(typeof(CashireDbContext))]
-    [Migration("20220502141149_initial")]
-    partial class initial
+    [Migration("20220521065849_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
             modelBuilder.Entity("WinFormRetail.Model.Product", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ID")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Price")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("Stock")
                         .HasColumnType("INTEGER");
@@ -45,19 +40,14 @@ namespace WinFormRetail.Migrations
 
             modelBuilder.Entity("WinFormRetail.Model.Transaction", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ID")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
+                    b.Property<string>("UsersID")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("UsersID")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
@@ -75,14 +65,15 @@ namespace WinFormRetail.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ProductID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TransactionID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("TransactionID")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -95,9 +86,8 @@ namespace WinFormRetail.Migrations
 
             modelBuilder.Entity("WinFormRetail.Model.User", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ID")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -111,14 +101,7 @@ namespace WinFormRetail.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("Phone")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Username")
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -131,9 +114,7 @@ namespace WinFormRetail.Migrations
                 {
                     b.HasOne("WinFormRetail.Model.User", "Users")
                         .WithMany()
-                        .HasForeignKey("UsersID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsersID");
 
                     b.Navigation("Users");
                 });
@@ -148,9 +129,7 @@ namespace WinFormRetail.Migrations
 
                     b.HasOne("WinFormRetail.Model.Transaction", "Transaction")
                         .WithMany()
-                        .HasForeignKey("TransactionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TransactionID");
 
                     b.Navigation("Product");
 

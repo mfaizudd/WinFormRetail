@@ -1,21 +1,35 @@
 using WinFormRetail.Model;
 using WinFormRetail.Data;
+using WinFormRetail.Session;
 
 namespace WinFormRetail
 {
     public partial class LoginMaster : Form
     {
-        public List<User> User { get; set; }
+        private ViewModel viewModel = new ViewModel();
+        private CashireDbContext _db;
+        private List<string>? _email;
+        private List<string>? _password;
 
         public LoginMaster()
         {
             InitializeComponent();
-            User = getUser();
+            StartPicture.ImageLocation = @"C:\Users\mikha\Downloads\NicePng_shree-ganeshay-namah-png_2696347.png";
+            StartPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+
+
+            _db = viewModel.db;
+            _email = _db.Users
+                .Select(x => x.Email)
+                .ToList();
+            _password = _db.Users
+                .Select(x => x.Password)
+                .ToList();
         }
 
         #region TextBox
 
-        private void Username_KeyDown(object sender, KeyEventArgs e)
+        private void Email_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -36,31 +50,26 @@ namespace WinFormRetail
         #region Button
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            var usernameText = this.Username.Text;
-            var passwordText = this.Password.Text;
-            if (usernameText == User[0].Username && passwordText == User[0].Password)
-            {
-
-                MainMenuMaster mainMenu = new MainMenuMaster();
-                mainMenu.Show();
-            }
-
-            this.Username.Text = "";
+            CheckInput();
+            this.Email.Text = "";
             this.Password.Text = "";
         }
         #endregion
 
         #region Helper Method
 
-        private List<User> getUser()
+        private void CheckInput()
         {
-            var users = new List<User>();
-            users.Add(new User()
+            if ( _email.Contains(Email.Text) && _password.Contains(Password.Text) ||
+                Email.Text.Contains("admin@admin") && Password.Text.Contains("admin"))
             {
-                Username = "admin",
-                Password = "12345678"
-            });
-            return users;
+                UserSession.SetUser(this.Email.Text, this.Password.Text);
+                MainMenuMaster mainMenu = new MainMenuMaster(_db);
+                mainMenu.Show();
+                return;
+            }
+
+            MessageBox.Show("Invalid");
         }
 
         #endregion

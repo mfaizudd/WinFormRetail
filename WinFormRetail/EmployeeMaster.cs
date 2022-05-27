@@ -14,17 +14,18 @@ namespace WinFormRetail
 {
     public partial class EmployeeMaster : Form
     {
-        CashireDbContext db = new CashireDbContext();
+        private CashireDbContext _db;
         private int Id;
         private string ClickedId = "";
 
-        public EmployeeMaster()
+        public EmployeeMaster(CashireDbContext db)
         {
             InitializeComponent();
+            _db = db;
+
             SetEmployeeGroupBoxFalse();
             Refresh();
-
-            Id = GetLastId();
+            Id = Convert.ToInt32(GetLastId());
         }
 
 
@@ -74,7 +75,7 @@ namespace WinFormRetail
         private void EditButton_Click(object sender, EventArgs e)
         {
             var selectedRow = DataGrid.SelectedRows[0].DataBoundItem as User;
-            ClickedId = selectedRow.ID.ToString();
+            ClickedId = selectedRow.ID;
             NameTextBox.Text = selectedRow.Name.ToString();
             EmailTextBox.Text = selectedRow.Email.ToString();
             PhoneTextBox.Text = selectedRow.Phone.ToString();
@@ -129,17 +130,15 @@ namespace WinFormRetail
         {
             Id += 1;
 
-            db.Users.Add(new User
+            _db.Users.Add(new User
             {
-                ID = Id,
-                UserId = GetFormatedId(Id),
-                Username = NameTextBox.Text,
+                ID = GetFormatedId(Id),
                 Name = NameTextBox.Text,
                 Email = EmailTextBox.Text,
-                Phone = Convert.ToInt64(PhoneTextBox.Text),
+                Phone = PhoneTextBox.Text.ToString(),
                 Password = PasswordTextBox.Text,
             });
-            db.SaveChanges();
+            _db.SaveChanges();
 
             Refresh();
         }
@@ -150,14 +149,14 @@ namespace WinFormRetail
         private void EditProduct()
         {
 
-            var user = db.Users
-                .Where(x => x.ID == Convert.ToInt32(ClickedId))
+            var user = _db.Users
+                .Where(x => x.ID == ClickedId)
                 .First();
             user.Name = NameTextBox.Text;
             user.Email = EmailTextBox.Text;
-            user.Phone = Convert.ToInt32(PhoneTextBox.Text);
+            user.Phone = PhoneTextBox.Text.ToString();
             user.Password = PasswordTextBox.Text;
-            db.SaveChanges();
+            _db.SaveChanges();
 
             Refresh();
         }
@@ -169,24 +168,37 @@ namespace WinFormRetail
         {
             var temporaryId = Id;
 
-            var count = db.Users
+            var stringId = Convert.ToInt32(ClickedId.Substring(1));
+            var subStringId = GetFormatedId(stringId - 1);
+
+            var amount = _db.Users
                 .OrderBy(x => x.ID)
                 .Select(x => x.ID)
                 .Count();
 
-            var user = db.Users
-                .Where(x => x.ID == Convert.ToInt32(ClickedId))
+            var user = _db.Users
+                .Where(x => x.ID == ClickedId)
                 .First();
 
-            if (user.ID == temporaryId)
+            var subUser = _db.Users
+                .Where(x => x.ID == subStringId)
+                .FirstOrDefault();
+
+            if (stringId == Id)
             {
-                temporaryId -= count;
-                Id -= temporaryId + 1;
+                if (subUser == null)
+                {
+                    temporaryId -= amount;
+                    Id -= temporaryId + 1;
+                    return;
+                }
+
+                Id -= 1;
             }
 
 
-            db.Users.Remove(user);
-            db.SaveChanges();
+            _db.Users.Remove(user);
+            _db.SaveChanges();
 
             Refresh();
         }
@@ -198,20 +210,19 @@ namespace WinFormRetail
         /// <summary>
         /// GET the last index / id in the database
         /// </summary>
-        private int GetLastId()
+        private string GetLastId()
         {
             try
             {
-                var id = db.Users
-                .OrderBy(x => x.ID)
-                .Select(x => x.ID)
-                .Last();
-
-                return id;
+                var id = _db.Products
+                    .OrderBy(x => x.ID)
+                    .Select(x => x.ID)
+                    .Last();
+                return id.Substring(1);
             }
             catch (Exception ex)
             {
-                return 0;
+                return "0";
             }
         }
 
@@ -251,11 +262,10 @@ namespace WinFormRetail
         /// </summary>
         private new void Refresh()
         {
-            var user = db.Users
+            var user = _db.Users
                 .OrderBy(x => x.ID)
                 .ToList();
             DataGrid.DataSource = user;
-            DataGrid.Columns["ID"].Visible = false;
             ClickedId = "";
             SetEmployeeGroupBoxFalse();
             SetDataGridEnableTrue();

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WinFormRetail.Data;
 
 namespace WinFormRetail.Model
 {
-    public class Transaction
+    public class ViewModel
     {
-        public string ID { get; set; }
-        public DateTime Date { get; set; }
-        public virtual User Users { get; set; }
+        public CashireDbContext db = new CashireDbContext();
     }
+
 }

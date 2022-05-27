@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Username = new System.Windows.Forms.TextBox();
+            this.Email = new System.Windows.Forms.TextBox();
             this.Password = new System.Windows.Forms.TextBox();
-            this.ProfilePicture = new System.Windows.Forms.PictureBox();
+            this.StartPicture = new System.Windows.Forms.PictureBox();
             this.LoginButton = new System.Windows.Forms.Button();
             this.UsernameLabel = new System.Windows.Forms.Label();
             this.PasswordLabel = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.ProfilePicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartPicture)).BeginInit();
             this.SuspendLayout();
             // 
-            // Username
+            // Email
             // 
-            this.Username.Location = new System.Drawing.Point(239, 119);
-            this.Username.Name = "Username";
-            this.Username.Size = new System.Drawing.Size(157, 23);
-            this.Username.TabIndex = 0;
-            this.Username.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Username_KeyDown);
+            this.Email.Location = new System.Drawing.Point(239, 119);
+            this.Email.Name = "Email";
+            this.Email.Size = new System.Drawing.Size(157, 23);
+            this.Email.TabIndex = 0;
+            this.Email.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Email_KeyDown);
             // 
             // Password
             // 
@@ -54,13 +54,15 @@
             this.Password.UseSystemPasswordChar = true;
             this.Password.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Password_KeyDown);
             // 
-            // ProfilePicture
+            // StartPicture
             // 
-            this.ProfilePicture.Location = new System.Drawing.Point(61, 84);
-            this.ProfilePicture.Name = "ProfilePicture";
-            this.ProfilePicture.Size = new System.Drawing.Size(140, 118);
-            this.ProfilePicture.TabIndex = 2;
-            this.ProfilePicture.TabStop = false;
+            this.StartPicture.Enabled = false;
+            this.StartPicture.ImageLocation = "";
+            this.StartPicture.Location = new System.Drawing.Point(78, 81);
+            this.StartPicture.Name = "StartPicture";
+            this.StartPicture.Size = new System.Drawing.Size(131, 118);
+            this.StartPicture.TabIndex = 2;
+            this.StartPicture.TabStop = false;
             // 
             // LoginButton
             // 
@@ -77,9 +79,9 @@
             this.UsernameLabel.AutoSize = true;
             this.UsernameLabel.Location = new System.Drawing.Point(239, 101);
             this.UsernameLabel.Name = "UsernameLabel";
-            this.UsernameLabel.Size = new System.Drawing.Size(60, 15);
+            this.UsernameLabel.Size = new System.Drawing.Size(36, 15);
             this.UsernameLabel.TabIndex = 4;
-            this.UsernameLabel.Text = "Username";
+            this.UsernameLabel.Text = "Email";
             // 
             // PasswordLabel
             // 
@@ -90,7 +92,7 @@
             this.PasswordLabel.TabIndex = 5;
             this.PasswordLabel.Text = "Password";
             // 
-            // LoginForm
+            // LoginMaster
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -98,13 +100,13 @@
             this.Controls.Add(this.PasswordLabel);
             this.Controls.Add(this.UsernameLabel);
             this.Controls.Add(this.LoginButton);
-            this.Controls.Add(this.ProfilePicture);
+            this.Controls.Add(this.StartPicture);
             this.Controls.Add(this.Password);
-            this.Controls.Add(this.Username);
+            this.Controls.Add(this.Email);
             this.MaximumSize = new System.Drawing.Size(487, 336);
-            this.Name = "LoginForm";
+            this.Name = "LoginMaster";
             this.Text = "Login";
-            ((System.ComponentModel.ISupportInitialize)(this.ProfilePicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartPicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -112,9 +114,9 @@
 
         #endregion
 
-        private TextBox Username;
+        private TextBox Email;
         private TextBox Password;
-        private PictureBox ProfilePicture;
+        private PictureBox StartPicture;
         private Button LoginButton;
         private Label UsernameLabel;
         private Label PasswordLabel;

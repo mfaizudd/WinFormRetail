@@ -69,20 +69,21 @@
             // ProfileMenu
             // 
             this.ProfileMenu.Name = "ProfileMenu";
-            this.ProfileMenu.Size = new System.Drawing.Size(112, 22);
+            this.ProfileMenu.Size = new System.Drawing.Size(180, 22);
             this.ProfileMenu.Text = "Profile";
+            this.ProfileMenu.Click += new System.EventHandler(this.ProfileMenu_Click);
             // 
             // LogoutMenu
             // 
             this.LogoutMenu.Name = "LogoutMenu";
-            this.LogoutMenu.Size = new System.Drawing.Size(112, 22);
+            this.LogoutMenu.Size = new System.Drawing.Size(180, 22);
             this.LogoutMenu.Text = "Logout";
             this.LogoutMenu.Click += new System.EventHandler(this.LogoutMenu_Click);
             // 
             // ExitMenu
             // 
             this.ExitMenu.Name = "ExitMenu";
-            this.ExitMenu.Size = new System.Drawing.Size(112, 22);
+            this.ExitMenu.Size = new System.Drawing.Size(180, 22);
             this.ExitMenu.Text = "Exit";
             this.ExitMenu.Click += new System.EventHandler(this.ExitMenu_Click);
             // 
@@ -123,12 +124,14 @@
             this.NewTransactionMenu.Name = "NewTransactionMenu";
             this.NewTransactionMenu.Size = new System.Drawing.Size(161, 22);
             this.NewTransactionMenu.Text = "New Transaction";
+            this.NewTransactionMenu.Click += new System.EventHandler(this.NewTransactionMenu_Click);
             // 
             // HistoryMenu
             // 
             this.HistoryMenu.Name = "HistoryMenu";
             this.HistoryMenu.Size = new System.Drawing.Size(161, 22);
             this.HistoryMenu.Text = "History";
+            this.HistoryMenu.Click += new System.EventHandler(this.HistoryMenu_Click);
             // 
             // reportToolStripMenuItem
             // 

@@ -14,17 +14,18 @@ namespace WinFormRetail
 {
     public partial class ProductMaster : Form
     {
-        CashireDbContext db = new CashireDbContext();
+        private CashireDbContext _db;
         private int Id;
         private string ClickedId = "";
 
-        public ProductMaster()
+        public ProductMaster(CashireDbContext db)
         {
             InitializeComponent();
+            _db = db;
+
+            Id = Convert.ToInt32(GetLastId());
             SetProductGroupBoxFalse();
             Refresh();
-
-            Id = GetLastId();
         }
 
         #region KeyDown
@@ -57,7 +58,7 @@ namespace WinFormRetail
         private void EditButton_Click(object sender, EventArgs e)
         {
             var selectedRow = DataGrid.SelectedRows[0].DataBoundItem as Product;
-            ClickedId = selectedRow.ID.ToString();
+            ClickedId = selectedRow.ID;
             NameTextBox.Text = selectedRow.Name.ToString();
             PriceTextBox.Text = selectedRow.Price.ToString();
             StockTextBox.Text = selectedRow.Stock.ToString();
@@ -68,8 +69,9 @@ namespace WinFormRetail
         private void DeleteButton_Click(object sender, EventArgs e)
         {
             var selectedRow = DataGrid.SelectedRows[0].DataBoundItem as Product;
-            ClickedId = selectedRow.ID.ToString();
+            ClickedId = selectedRow.ID;
             var productName = selectedRow.Name;
+
             if (MessageBox.Show(
                 $"Are you sure you want to delete product {productName} with the ID of {ClickedId}",
                 "Delete",
@@ -111,15 +113,14 @@ namespace WinFormRetail
         {
             Id += 1;
 
-            db.Products.Add(new Product
+            _db.Products.Add(new Product
             {
-                ID = Id,
-                ProductId = GetFormatedId(Id),
+                ID = GetFormatedId(Id),
                 Name = this.NameTextBox.Text,
                 Price = Convert.ToInt32(this.PriceTextBox.Text),
                 Stock = Convert.ToInt32(this.StockTextBox.Text),
             });
-            db.SaveChanges();
+            _db.SaveChanges();
 
             Refresh();
         }
@@ -130,13 +131,13 @@ namespace WinFormRetail
         private void EditProduct()
         {
 
-            var product = db.Products
-                .Where(x => x.ID == Convert.ToInt32(ClickedId))
+            var product = _db.Products
+                .Where(x => x.ID == ClickedId)
                 .First();
             product.Name = NameTextBox.Text;
             product.Price = Convert.ToInt32(PriceTextBox.Text);
             product.Stock = Convert.ToInt32(StockTextBox.Text);
-            db.SaveChanges();
+            _db.SaveChanges();
 
             Refresh();
         }
@@ -148,24 +149,37 @@ namespace WinFormRetail
         {
             var temporaryId = Id;
 
-            var count = db.Products
+            var stringId = Convert.ToInt32(ClickedId.Substring(1));
+            var subStringId = GetFormatedId(stringId - 1);
+
+            var amount = _db.Products
                 .OrderBy(x => x.ID)
                 .Select(x => x.ID)
                 .Count();
 
-            var product = db.Products
-                .Where(x => x.ID == Convert.ToInt32(ClickedId))
+            var product = _db.Products
+                .Where(x => x.ID == ClickedId)
                 .First();
 
-            if (product.ID == temporaryId)
+            var subProduct = _db.Products
+                .Where(x => x.ID == subStringId)
+                .FirstOrDefault();
+
+            if ( stringId == Id )
             {
-                temporaryId -= count;
-                Id -= temporaryId + 1;
+                if (subProduct == null)
+                {
+                    temporaryId -= amount;
+                    Id -= temporaryId + 1;
+                    return;
+                }
+
+                Id -= 1;
             }
                 
 
-            db.Products.Remove(product);
-            db.SaveChanges();
+            _db.Products.Remove(product);
+            _db.SaveChanges();
 
             Refresh();
         }
@@ -177,22 +191,23 @@ namespace WinFormRetail
         /// <summary>
         /// GET the last index / id in the database
         /// </summary>
-        private int GetLastId()
+        private string GetLastId()
         {
             try
             {
-                var id = db.Products
-                .OrderBy(x => x.ID)
-                .Select(x => x.ID)
-                .Last();
+                var productId = _db.Products
+                    .OrderBy(x => x.ID)
+                    .Select(x => x.ID)
+                    .Last();
 
-                return id;
-            } 
+                return productId.Substring(1);
+            }
             catch (Exception ex)
             {
-                return 0;
+                return "0000";
             }
         }
+
 
         /// <summary>
         /// Get formated id for product id
@@ -230,11 +245,10 @@ namespace WinFormRetail
         /// </summary>
         private new void Refresh()
         {
-            var product = db.Products
+            var product = _db.Products
                 .OrderBy(x => x.ID)
                 .ToList();
             DataGrid.DataSource = product;
-            DataGrid.Columns["ID"].Visible = false;
             ClickedId = "";
             SetProductGroupBoxFalse();
             SetDataGridEnableTrue();
